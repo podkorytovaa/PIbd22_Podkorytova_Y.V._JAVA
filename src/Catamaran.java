@@ -46,7 +46,7 @@ public class Catamaran extends Boat {
         super.DrawTransport(g);
 
         if (Floater) {
-            addFloat.DrawFloats(g, DopColor, _startPosX, _startPosY);
+            addFloat.DrawFloats(g, MainColor, DopColor, _startPosX, _startPosY);
         }
 
         if (ControlWheel) {

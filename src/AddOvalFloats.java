@@ -20,8 +20,8 @@ public class AddOvalFloats implements IFloats {
     }
 
     @Override
-    public void DrawFloats(Graphics g, Color dopColor, int x, int y) {
-        g.setColor(Color.BLUE);
+    public void DrawFloats(Graphics g, Color mainColor, Color dopColor, int x, int y) {
+        g.setColor(mainColor);
         g.fillOval(x + 50, y + 25, 65, 30);
         g.setColor(dopColor);
         g.fillOval(x + 15, y + 30, 85, 20);
@@ -32,7 +32,7 @@ public class AddOvalFloats implements IFloats {
                 break;
 
             case Two:
-                g.setColor(Color.BLUE);
+                g.setColor(mainColor);
                 g.fillOval(x + 50, y + 65, 65, 30);
                 g.fillPolygon(new int[] {x + 10, x + 85, x + 115, x + 85, x + 10},
                         new int[] {y + 65, y + 65, y + 80, y + 95, y + 95}, 5);
@@ -41,7 +41,7 @@ public class AddOvalFloats implements IFloats {
                 g.fillOval(x + 15, y + 70, 85, 20);
                 g.fillRect(x, y + 77, 10, 5);
 
-                g.setColor(Color.BLUE);
+                g.setColor(mainColor);
                 g.drawRect(x, y + 77, 10, 5);
 
                 g.setColor(Color.BLACK);
@@ -54,7 +54,8 @@ public class AddOvalFloats implements IFloats {
                 g.setColor(dopColor);
                 g.fillOval(x + 10, y, 105, 14);
                 g.fillOval(x + 10, y + 66, 105, 14);
-                g.setColor(Color.BLUE);
+
+                g.setColor(mainColor);
                 g.drawOval(x + 10, y, 105, 14);
                 g.drawOval(x + 10, y + 66, 105, 14);
 
