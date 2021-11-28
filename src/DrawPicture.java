@@ -2,19 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DrawPicture extends JPanel {
-    private Catamaran catamaran;
+    private ITransport transport;
 
     public void paintComponent(Graphics g) {
-        if (catamaran != null) {
-            catamaran.DrawTransport(g);
+        if (transport != null) {
+            transport.DrawTransport(g);
         }
     }
 
-    public void SetCatamaran(Catamaran ex) {
-        this.catamaran = ex;
+    public void SetTransport(ITransport transport) {
+        this.transport = transport;
     }
 
-    public Catamaran GetCatamaran() {
-        return catamaran;
+    public ITransport GetCatamaran() {
+        return transport;
     }
 }

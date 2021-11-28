@@ -4,10 +4,11 @@ import java.util.*;
 
 public class FormCatamaran {
     private JFrame frame;
-    private Catamaran catamaran;
+    private ITransport boat;
     private DrawPicture draw;
 
-    private JButton buttonCreate;
+    private JButton buttonCreateBoat;
+    private JButton buttonCreateCatamaran;
     private JButton buttonUp;
     private JButton buttonDown;
     private JButton buttonLeft;
@@ -24,7 +25,8 @@ public class FormCatamaran {
 
         InitializeComponent();
 
-        frame.getContentPane().add(buttonCreate);
+        frame.getContentPane().add(buttonCreateBoat);
+        frame.getContentPane().add(buttonCreateCatamaran);
         frame.getContentPane().add(buttonUp);
         frame.getContentPane().add(buttonDown);
         frame.getContentPane().add(buttonLeft);
@@ -35,14 +37,23 @@ public class FormCatamaran {
     }
 
     public void InitializeComponent() {
-        buttonCreate = new JButton("Создать");
-        buttonCreate.setBounds(10, 440, 100, 30);
-        buttonCreate.addActionListener(e -> {
+        buttonCreateBoat = new JButton("Создать лодку");
+        buttonCreateBoat.setBounds(10, 440, 150, 30);
+        buttonCreateBoat.addActionListener(e -> {
             Random rnd = new Random();
-            catamaran = new Catamaran();
-            catamaran.Init(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.BLUE, Color.WHITE, true, true,  rnd.nextInt(3) + 1);
-            catamaran.SetPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10, draw.getWidth(), draw.getHeight());
-            draw.SetCatamaran(catamaran);
+            boat = new Boat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.BLUE);
+            boat.SetPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10, draw.getWidth(), draw.getHeight());
+            draw.SetTransport(boat);
+            frame.repaint();
+        });
+
+        buttonCreateCatamaran = new JButton("Создать катамаран");
+        buttonCreateCatamaran.setBounds(170, 440, 170, 30);
+        buttonCreateCatamaran.addActionListener(e -> {
+            Random rnd = new Random();
+            boat = new Catamaran(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000, Color.BLUE, Color.WHITE, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(3));
+            boat.SetPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10, draw.getWidth(), draw.getHeight());
+            draw.SetTransport(boat);
             frame.repaint();
         });
 
@@ -71,16 +82,16 @@ public class FormCatamaran {
         String name = button.getName();
         switch (name) {
             case "Up":
-                catamaran.MoveTransport(Direction.Up);
+                boat.MoveTransport(Direction.Up);
                 break;
             case "Down":
-                catamaran.MoveTransport(Direction.Down);
+                boat.MoveTransport(Direction.Down);
                 break;
             case "Left":
-                catamaran.MoveTransport(Direction.Left);
+                boat.MoveTransport(Direction.Left);
                 break;
             case "Right":
-                catamaran.MoveTransport(Direction.Right);
+                boat.MoveTransport(Direction.Right);
                 break;
         }
         frame.repaint();

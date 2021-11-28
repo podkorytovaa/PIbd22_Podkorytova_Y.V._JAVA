@@ -1,29 +1,15 @@
 import java.awt.*;
 
-public class Catamaran {
-    private AddFloats addFloat;
-    private int _startPosX; // Левая координата отрисовки катамарана
-    private int _startPosY; // Правая кооридната отрисовки катамарана
-    private int _pictureWidth; // Ширина окна отрисовки
-    private int _pictureHeight; // Высота окна отрисовки
-    private final int catamaranWidth = 115; // Ширина отрисовки катамарана
-    private final int catamaranHeight = 95; // Высота отрисовки катамарана
-
-    public int MaxSpeed; // Максимальная скорость
-    public int getMaxSpeed() { return MaxSpeed; }
-    public void setMaxSpeed(int maxSpeed) { MaxSpeed = maxSpeed; }
-
-    public float Weight; // Вес катамарана
-    public float getWeight() { return Weight; }
-    public void setWeight(float weight) { Weight = weight; }
-
-    public Color MainColor; // Основной цвет
-    public Color getMainColor() { return MainColor; }
-    public void setMainColor(Color mainColor) { MainColor = mainColor; }
+public class Catamaran extends Boat {
+    private IFloats addFloat;
 
     public Color DopColor; // Дополнительный цвет
     public Color getDopColor() { return DopColor; }
     public void setDopColor(Color dopColor) { DopColor = dopColor; }
+
+    private boolean Floater; // Признак наличия поплавков
+    public boolean getFloater() { return Floater; }
+    public void setFloater(boolean floater) { Floater = floater; }
 
     public boolean ControlWheel; // Признак наличия перо руля
     public boolean getControlWheel() { return ControlWheel; }
@@ -33,61 +19,35 @@ public class Catamaran {
     public boolean getSeat() { return Seat; }
     public void setSeat(boolean seat) { Seat = seat; }
 
-    // Инициализация свойств
-    public void Init(int maxSpeed, float weight, Color mainColor, Color dopColor, boolean controlWheel, boolean seat, int floats_amount) {
-        MaxSpeed = maxSpeed;
-        Weight = weight;
-        MainColor = mainColor;
+    // Конструктор
+    public Catamaran(int maxSpeed, int weight, Color mainColor, Color dopColor, boolean floater, boolean controlWheel, boolean seat, int floatsAmount, int addState) {
+        super(maxSpeed, weight, mainColor, 115, 95);
         DopColor = dopColor;
+        Floater = floater;
         ControlWheel = controlWheel;
         Seat = seat;
 
-        addFloat = new AddFloats();
-        addFloat.SetAmount(floats_amount);
-    }
-
-    // Установка позиции катамарана
-    public void SetPosition(int x, int y, int width, int height) {
-        _startPosX = x;
-        _startPosY = y;
-        _pictureWidth = width;
-        _pictureHeight = height;
-    }
-
-    // Изменение направления пермещения
-    public void MoveTransport(Direction direction) {
-        float step = MaxSpeed * 100 / Weight;
-        switch (direction) {
-            // вправо
-            case Right:
-                if (_startPosX + step < _pictureWidth - catamaranWidth) {
-                    _startPosX += step;
-                }
+        switch (addState) {
+            case 0:
+                addFloat = new AddFloats();
                 break;
-            //влево
-            case Left:
-                if (_startPosX - step > 0) {
-                    _startPosX -= step;
-                }
+            case 1:
+                addFloat = new AddOvalFloats();
                 break;
-            //вверх
-            case Up:
-                if (_startPosY - step > 0) {
-                    _startPosY -= step;
-                }
-                break;
-            //вниз
-            case Down:
-                if (_startPosY + step < _pictureHeight - catamaranHeight) {
-                    _startPosY += step;
-                }
+            case 2:
+                addFloat = new AddSemiOvalFloats();
                 break;
         }
+        addFloat.SetAmount(floatsAmount);
     }
 
     // Отрисовка катамарана
     public void DrawTransport(Graphics g) {
-        addFloat.DrawFloats(g, DopColor, _startPosX, _startPosY);
+        super.DrawTransport(g);
+
+        if (Floater) {
+            addFloat.DrawFloats(g, DopColor, _startPosX, _startPosY);
+        }
 
         if (ControlWheel) {
             g.setColor(DopColor);
