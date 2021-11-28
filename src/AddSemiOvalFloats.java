@@ -21,16 +21,10 @@ public class AddSemiOvalFloats implements IFloats {
 
     @Override
     public void DrawFloats(Graphics g, Color mainColor, Color dopColor, int x, int y) {
-        g.setColor(Color.BLUE);
-        g.fillPolygon(new int[] {x + 85, x + 100, x + 115, x + 100, x + 85},
-                new int[] {y + 25, y + 30, y + 40, y + 50, y + 55}, 5);
-        g.setColor(dopColor);
-        g.fillOval(x + 15, y + 30, 75, 20);
-
         g.setColor(mainColor);
         g.fillPolygon(new int[] {x + 85, x + 100, x + 115, x + 100, x + 85},
                 new int[] {y + 25, y + 30, y + 40, y + 50, y + 55}, 5);
-        g.setColor(dopColor);
+        g.setColor(Color.WHITE);
         g.fillOval(x + 15, y + 30, 75, 20);
 
         switch (floats) {
@@ -44,10 +38,11 @@ public class AddSemiOvalFloats implements IFloats {
                 g.fillPolygon(new int[] {x + 10, x + 85, x + 100, x + 115, x + 100, x + 85, x + 10},
                         new int[] {y + 65, y + 65, y + 70, y + 80, y + 90, y + 95, y + 95}, 7);
 
-                g.setColor(dopColor);
+                g.setColor(Color.WHITE);
                 g.fillOval(x + 15, y + 70, 75, 20);
-                g.fillRect(x, y + 77, 10, 5);
 
+                g.setColor(dopColor);
+                g.fillRect(x, y + 77, 10, 5);
                 g.setColor(mainColor);
                 g.drawRect(x, y + 77, 10, 5);
 

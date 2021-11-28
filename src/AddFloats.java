@@ -21,7 +21,7 @@ public class AddFloats implements IFloats {
 
     @Override
     public void DrawFloats(Graphics g, Color mainColor, Color dopColor, int x, int y) {
-        g.setColor(dopColor);
+        g.setColor(Color.WHITE);
         g.fillOval(x + 15, y + 30, 75, 20);
         switch (floats) {
             case One:
@@ -34,8 +34,10 @@ public class AddFloats implements IFloats {
                 g.fillPolygon(new int[] {x + 10, x + 85, x + 115, x + 85, x + 10},
                         new int[] {y + 65, y + 65, y + 80, y + 95, y + 95}, 5);
 
-                g.setColor(dopColor);
+                g.setColor(Color.WHITE);
                 g.fillOval(x + 15, y + 70, 75, 20);
+
+                g.setColor(dopColor);
                 g.fillRect(x, y + 77, 10, 5);
                 g.setColor(mainColor);
                 g.drawRect(x, y + 77, 10, 5);

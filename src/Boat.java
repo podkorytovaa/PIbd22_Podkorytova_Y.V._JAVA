@@ -22,36 +22,30 @@ public class Boat extends Vehicle {
 
     // Изменение направления пермещения
     @Override
-    public void MoveTransport(Direction direction)
-    {
+    public void MoveTransport(Direction direction) {
         int step = MaxSpeed * 100 / Weight;
-        switch (direction)
-        {
+        switch (direction) {
             // вправо
             case Right:
-                if (_startPosX + step < _pictureWidth - catamaranWidth)
-                {
+                if (_startPosX + step < _pictureWidth - catamaranWidth) {
                     _startPosX += step;
                 }
                 break;
             //влево
             case Left:
-                if (_startPosX - step > 0)
-                {
+                if (_startPosX - step > 0) {
                     _startPosX -= step;
                 }
                 break;
             //вверх
             case Up:
-                if (_startPosY - step > 0)
-                {
+                if (_startPosY - step > 0) {
                     _startPosY -= step;
                 }
                 break;
             //вниз
             case Down:
-                if (_startPosY + step < _pictureHeight - catamaranHeight)
-                {
+                if (_startPosY + step < _pictureHeight - catamaranHeight) {
                     _startPosY += step;
                 }
                 break;
@@ -59,8 +53,7 @@ public class Boat extends Vehicle {
     }
 
     @Override
-    public void DrawTransport(Graphics g)
-    {
+    public void DrawTransport(Graphics g) {
         g.setColor(MainColor);
         g.fillPolygon(new int[] {_startPosX + 10, _startPosX + 85, _startPosX + 115, _startPosX + 85, _startPosX + 10},
                 new int[] {_startPosY + 25, _startPosY + 25, _startPosY + 40, _startPosY + 55, _startPosY + 55}, 5);
