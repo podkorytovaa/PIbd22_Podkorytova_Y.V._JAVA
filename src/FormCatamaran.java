@@ -19,7 +19,7 @@ public class FormCatamaran {
 
         frame = new JFrame("Катамаран");
         frame.setSize(700, 520);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
 
@@ -33,6 +33,13 @@ public class FormCatamaran {
         frame.getContentPane().add(buttonRight);
         frame.getContentPane().add(draw);
         draw.setBounds(0, 0, 695, 490);
+        frame.repaint();
+    }
+
+    // Передача лодки на форму
+    public void SetBoat(ITransport boat) {
+        this.boat = boat;
+        draw.SetTransport(boat);
         frame.repaint();
     }
 
