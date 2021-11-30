@@ -38,10 +38,10 @@ public class FormPort {
         buttonSetBoat = new JButton("Пришвартовать лодку");
         buttonSetBoat.setBounds(710, 10, 190, 30);
         buttonSetBoat.addActionListener(e -> {
-            Color mainColor = JColorChooser.showDialog(null, "Color", Color.BLUE);
+            Color mainColor = JColorChooser.showDialog(framePort, "Color", Color.BLUE);
             if (mainColor != null) {
                 Boat boat = new Boat(100,1000, mainColor);
-                int index = port.Plus(port, boat);
+                int index = port.Plus(boat);
                 if (index > -1) {
                     framePort.repaint();
                 }
@@ -54,13 +54,13 @@ public class FormPort {
         buttonSetCatamaran = new JButton("Пришвартовать катамаран");
         buttonSetCatamaran.setBounds(710, 50, 190, 30);
         buttonSetCatamaran.addActionListener(e -> {
-            Color mainColor = JColorChooser.showDialog(null, "Color", Color.BLUE);
+            Color mainColor = JColorChooser.showDialog(framePort, "Color", Color.BLUE);
             if (mainColor != null) {
-                Color dopColor = JColorChooser.showDialog(null, "Color", Color.WHITE);
+                Color dopColor = JColorChooser.showDialog(framePort, "Color", Color.WHITE);
                 if (dopColor != null) {
                     Random rnd = new Random();
                     Catamaran catamaran = new Catamaran(100, 1000, mainColor, dopColor,true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(3));
-                    int index = port.Plus(port, catamaran);
+                    int index = port.Plus(catamaran);
                     if (index > -1) {
                         framePort.repaint();
                     }
@@ -82,7 +82,7 @@ public class FormPort {
         buttonTakeBoat.addActionListener(e -> {
             if (textFieldPlace.getText() != "") {
                 int index = Integer.parseInt(textFieldPlace.getText());
-                ITransport boat = port.Minus(port, index);
+                ITransport boat = port.Minus(index);
                 if (boat != null) {
                     FormCatamaran formCatamaran = new FormCatamaran();
                     formCatamaran.SetBoat(boat);

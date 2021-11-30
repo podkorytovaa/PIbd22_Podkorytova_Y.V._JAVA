@@ -17,15 +17,15 @@ public class Port<T extends ITransport, F extends IFloats> {
     }
 
     // Перегрузка оператора сложения
-    public int Plus(Port<T, F> p, T boat) {
+    public int Plus(T boat) {
         int i = 0;
-        while (i < p.pictureHeight / p._placeSizeHeight) {
+        while (i < pictureHeight / _placeSizeHeight) {
             int j = 0;
-            while (j < p.pictureWidth / p._placeSizeWidth) {
-                if (p._places[i * (p.pictureWidth / p._placeSizeWidth) + j] == null) {
-                    p._places[i * (p.pictureWidth / p._placeSizeWidth) + j] = boat;
-                    boat.SetPosition(p._placeSizeWidth * j + 5, p._placeSizeHeight * i + 12, p.pictureWidth, p.pictureHeight);
-                    return (i * (p.pictureWidth / p._placeSizeWidth) + j);
+            while (j < pictureWidth / _placeSizeWidth) {
+                if (_places[i * (pictureWidth / _placeSizeWidth) + j] == null) {
+                    _places[i * (pictureWidth / _placeSizeWidth) + j] = boat;
+                    boat.SetPosition(_placeSizeWidth * j + 5, _placeSizeHeight * i + 12, pictureWidth, pictureHeight);
+                    return (i * (pictureWidth / _placeSizeWidth) + j);
                 }
                 j++;
             }
@@ -35,10 +35,10 @@ public class Port<T extends ITransport, F extends IFloats> {
     }
 
     // Перегрузка оператора вычитания
-    public T Minus(Port<T, F> p, int index) {
-        if (index > -1 && index < p._places.length && p._places[index] != null) {
-            T temp = (T) p._places[index];
-            p._places[index] = null;
+    public T Minus(int index) {
+        if (index > -1 && index < _places.length && _places[index] != null) {
+            T temp = (T) _places[index];
+            _places[index] = null;
             return temp;
         }
         return null;
