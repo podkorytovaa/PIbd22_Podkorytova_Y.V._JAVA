@@ -1,7 +1,9 @@
 import java.awt.*;
+import java.util.*;
 
 public class Port<T extends ITransport, F extends IFloats> {
-    private final T[] _places; // Массив объектов, которые храним
+    private final ArrayList<T> _places; // Список объектов, которые храним
+    private final int _maxCount; // Максимальное количество мест в гавани
     private final int pictureWidth; // Ширина окна отрисовки
     private final int pictureHeight; // Высота окна отрисовки
     private final int _placeSizeWidth = 230; // Ширина парковочного места
@@ -11,34 +13,26 @@ public class Port<T extends ITransport, F extends IFloats> {
     public Port(int picWidth, int picHeight) {
         int width = picWidth / _placeSizeWidth;
         int height = picHeight / _placeSizeHeight;
-        _places = (T[]) new ITransport[width * height];
+        _maxCount = width * height;
+        _places = new ArrayList<>();
         pictureWidth = picWidth;
         pictureHeight = picHeight;
     }
 
     // Перегрузка оператора сложения
     public int Plus(T boat) {
-        int i = 0;
-        while (i < pictureHeight / _placeSizeHeight) {
-            int j = 0;
-            while (j < pictureWidth / _placeSizeWidth) {
-                if (_places[i * (pictureWidth / _placeSizeWidth) + j] == null) {
-                    _places[i * (pictureWidth / _placeSizeWidth) + j] = boat;
-                    boat.SetPosition(_placeSizeWidth * j + 5, _placeSizeHeight * i + 12, pictureWidth, pictureHeight);
-                    return (i * (pictureWidth / _placeSizeWidth) + j);
-                }
-                j++;
-            }
-            i++;
+        if (_places.size() < _maxCount) {
+            _places.add(boat);
+            return _places.size() - 1;
         }
         return -1;
     }
 
     // Перегрузка оператора вычитания
     public T Minus(int index) {
-        if (index > -1 && index < _places.length && _places[index] != null) {
-            T temp = (T) _places[index];
-            _places[index] = null;
+        if (index > -1 && index < _maxCount && _places.get(index) != null) {
+            T temp = _places.get(index);
+            _places.remove(index);
             return temp;
         }
         return null;
@@ -47,11 +41,11 @@ public class Port<T extends ITransport, F extends IFloats> {
     public boolean More(Port<T, F> p1, Port<T, F> p2) {
         int placesP1 = 0;
         int placesP2 = 0;
-        for (int i = 0; i < p1._places.length; i++) {
-            if (p1._places[i] != null) placesP1++;
+        for (int i = 0; i < p1._places.size(); i++) {
+            if (p1._places.get(i) != null) placesP1++;
         }
-        for (int i = 0; i < p2._places.length; i++) {
-            if (p2._places[i] != null) placesP2++;
+        for (int i = 0; i < p2._places.size(); i++) {
+            if (p2._places.get(i) != null) placesP2++;
         }
         return (placesP1 > placesP2);
     }
@@ -59,11 +53,11 @@ public class Port<T extends ITransport, F extends IFloats> {
     public boolean Less(Port<T, F> p1, Port<T, F> p2) {
         int placesP1 = 0;
         int placesP2 = 0;
-        for (int i = 0; i < p1._places.length; i++) {
-            if (p1._places[i] != null) placesP1++;
+        for (int i = 0; i < p1._places.size(); i++) {
+            if (p1._places.get(i) != null) placesP1++;
         }
-        for (int i = 0; i < p2._places.length; i++) {
-            if (p2._places[i] != null) placesP2++;
+        for (int i = 0; i < p2._places.size(); i++) {
+            if (p2._places.get(i) != null) placesP2++;
         }
         return (placesP1 < placesP2);
     }
@@ -71,10 +65,9 @@ public class Port<T extends ITransport, F extends IFloats> {
     // Метод отрисовки гавани
     public void Draw(Graphics g) {
         DrawMarking(g);
-        for (int i = 0; i < _places.length; i++) {
-            if (_places[i] != null) {
-                _places[i].DrawTransport(g);
-            }
+        for (int i = 0; i < _places.size(); i++) {
+            _places.get(i).SetPosition(i % (pictureWidth / _placeSizeWidth) * _placeSizeWidth + 5, i / (pictureWidth / _placeSizeWidth) * _placeSizeHeight + 14, pictureWidth, pictureHeight);
+            _places.get(i).DrawTransport(g);
         }
     }
 
@@ -91,5 +84,12 @@ public class Port<T extends ITransport, F extends IFloats> {
             }
             g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth, (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
+    }
+
+    public T Get(int index) {
+        if (index > -1 && index < _places.size()) {
+            return _places.get(index);
+        }
+        return null;
     }
 }

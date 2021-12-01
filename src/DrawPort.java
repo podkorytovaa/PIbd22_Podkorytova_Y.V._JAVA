@@ -2,19 +2,22 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DrawPort extends JPanel {
-    private Port<Boat, IFloats> port;
+    private PortCollection portCollection;
+    private String port = null;
 
-    public DrawPort(Port<Boat, IFloats> port) {
-        this.port = port;
+    public DrawPort(PortCollection portCollection) {
+        this.portCollection = portCollection;
     }
 
     protected void paintComponent(Graphics g) {
         if (port != null) {
-            port.Draw(g);
+            if (portCollection != null) {
+                portCollection.Get(port).Draw(g);
+            }
         }
     }
 
-    public Port<Boat, IFloats> getPort() {
-        return port;
+    public void SetPort(String port) {
+        this.port = port;
     }
 }
