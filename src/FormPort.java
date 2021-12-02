@@ -16,8 +16,7 @@ public class FormPort {
     private DefaultListModel<String> listPorts;
     private JButton buttonDelPort;
     private Border borderPorts;
-    private JButton buttonSetBoat;
-    private JButton buttonSetCatamaran;
+    private JButton buttonPortTransport;
     private JPanel groupBoxTake;
     private JLabel labelPlace;
     private JTextField textFieldPlace;
@@ -34,8 +33,7 @@ public class FormPort {
         framePort.setVisible(true);
         InitializeComponent();
         framePort.getContentPane().add(groupBoxPorts);
-        framePort.getContentPane().add(buttonSetBoat);
-        framePort.getContentPane().add(buttonSetCatamaran);
+        framePort.getContentPane().add(buttonPortTransport);
         framePort.getContentPane().add(groupBoxTake);
         framePort.getContentPane().add(drawPort);
         framePort.repaint();
@@ -96,42 +94,18 @@ public class FormPort {
         groupBoxPorts.add(buttonAddPort);
         groupBoxPorts.add(buttonDelPort);
 
-        buttonSetBoat = new JButton("Пришвартовать лодку");
-        buttonSetBoat.setBounds(710, 270, 190, 30);
-        buttonSetBoat.addActionListener(e -> {
+        buttonPortTransport = new JButton("Пришвартовать транспорт");
+        buttonPortTransport.setBounds(710, 275, 190, 30);
+        buttonPortTransport.addActionListener(e -> {
             if (listBoxPorts.getSelectedIndex() >= 0) {
-                Color mainColor = JColorChooser.showDialog(framePort, "Color", Color.BLUE);
-                if (mainColor != null) {
-                    Boat boat = new Boat(100, 1000, mainColor);
-                    int index = portCollection.Get(listBoxPorts.getSelectedValue()).Plus(boat);
+                FormCatamaranConfig formConfig = new FormCatamaranConfig(framePort);
+                Vehicle transport = (Vehicle) formConfig.GetTransport();
+                if (transport  != null) {
+                    int index = portCollection.Get(listBoxPorts.getSelectedValue()).Plus((Boat)transport);
                     if (index > -1) {
                         framePort.repaint();
                     } else {
                         JOptionPane.showMessageDialog(framePort, "Гавань переполнена");
-                    }
-                }
-            }
-            else {
-                JOptionPane.showMessageDialog(framePort, "Гавань не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        buttonSetCatamaran = new JButton("Пришвартовать катамаран");
-        buttonSetCatamaran.setBounds(710, 310, 190, 30);
-        buttonSetCatamaran.addActionListener(e -> {
-            if (listBoxPorts.getSelectedIndex() >= 0) {
-                Color mainColor = JColorChooser.showDialog(framePort, "Color", Color.BLUE);
-                if (mainColor != null) {
-                    Color dopColor = JColorChooser.showDialog(framePort, "Color", Color.WHITE);
-                    if (dopColor != null) {
-                        Random rnd = new Random();
-                        Catamaran catamaran = new Catamaran(100, 1000, mainColor, dopColor, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(3));
-                        int index = portCollection.Get(listBoxPorts.getSelectedValue()).Plus(catamaran);
-                        if (index > -1) {
-                            framePort.repaint();
-                        } else {
-                            JOptionPane.showMessageDialog(framePort, "Гавань переполнена");
-                        }
                     }
                 }
             }
@@ -189,7 +163,7 @@ public class FormPort {
         groupBoxTake.add(textFieldPlace);
         groupBoxTake.add(buttonPutOnStack);
         groupBoxTake.add(buttonTakeBoat);
-        groupBoxTake.setBounds(720, 350, 180, 135);
+        groupBoxTake.setBounds(715, 330, 180, 135);
         groupBoxTake.setBorder(borderTake);
 
         drawPort.setBounds(0, 0, 695, 490);

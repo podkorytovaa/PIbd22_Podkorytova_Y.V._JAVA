@@ -4,6 +4,10 @@ public class Boat extends Vehicle {
     protected int catamaranWidth = 105; // Ширина отрисовки лодки
     protected int catamaranHeight = 55; // Высота отрисовки лодки
 
+    public void SetMainColor(Color mainColor) {
+        MainColor = mainColor;
+    }
+
     // Конструктор
     public Boat(int maxSpeed, int weight, Color mainColor) {
         MaxSpeed = maxSpeed;

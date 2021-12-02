@@ -9,4 +9,6 @@ public interface ITransport {
 
     // Отрисовка
     void DrawTransport(Graphics g);
+
+    void SetMainColor(Color color);
 }

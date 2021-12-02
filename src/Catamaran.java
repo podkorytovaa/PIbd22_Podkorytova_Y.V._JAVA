@@ -2,6 +2,8 @@ import java.awt.*;
 
 public class Catamaran extends Boat {
     private IFloats addFloat;
+    public IFloats getFloats() { return addFloat; }
+    public void setFloats(IFloats addFloat) { this.addFloat = addFloat; }
 
     public Color DopColor; // Дополнительный цвет
     public Color getDopColor() { return DopColor; }
