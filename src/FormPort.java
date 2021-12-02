@@ -175,8 +175,7 @@ public class FormPort {
         buttonTakeBoat.addActionListener(e -> {
             if (!stackTransport.isEmpty()) {
                 FormCatamaran formCatamaran = new FormCatamaran();
-                formCatamaran.SetBoat(stackTransport.get(0));
-                stackTransport.remove(0);
+                formCatamaran.SetBoat(stackTransport.pop());
                 framePort.repaint();
             }
             else {
