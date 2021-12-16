@@ -21,6 +21,9 @@ public class Catamaran extends Boat {
     public boolean getSeat() { return Seat; }
     public void setSeat(boolean seat) { Seat = seat; }
 
+    public int FloatsAmount;
+    public int AddState;
+
     // Конструктор
     public Catamaran(int maxSpeed, int weight, Color mainColor, Color dopColor, boolean floater, boolean controlWheel, boolean seat, int floatsAmount, int addState) {
         super(maxSpeed, weight, mainColor, 115, 95);
@@ -28,19 +31,33 @@ public class Catamaran extends Boat {
         Floater = floater;
         ControlWheel = controlWheel;
         Seat = seat;
+        FloatsAmount = floatsAmount;
+        AddState = addState;
+        //addFloat =
+        SetIFloats(AddState);
+        addFloat.SetAmount(FloatsAmount);
+    }
 
-        switch (addState) {
-            case 0:
-                addFloat = new AddFloats();
-                break;
-            case 1:
-                addFloat = new AddOvalFloats();
-                break;
-            case 2:
-                addFloat = new AddSemiOvalFloats();
-                break;
+    // Конструктор для загрузки с файла
+    public Catamaran(String info) {
+        super(info);
+        String[] strs = info.split(separator);
+        if (strs.length == 9) {
+            MaxSpeed = Integer.parseInt(strs[0]);
+            Weight = Integer.parseInt(strs[1]);
+            MainColor = Color.decode(strs[2]);
+            DopColor = Color.decode(strs[3]);
+            Floater = Boolean.parseBoolean(strs[4]);
+            ControlWheel = Boolean.parseBoolean(strs[5]);
+            Seat = Boolean.parseBoolean(strs[6]);
+
+            FloatsAmount = Integer.parseInt(strs[7]);
+            AddState = Integer.parseInt(strs[8]);
+            //addFloat =
+            SetIFloats(AddState);
+            addFloat.SetAmount(FloatsAmount);
+
         }
-        addFloat.SetAmount(floatsAmount);
     }
 
     // Отрисовка катамарана
@@ -62,5 +79,24 @@ public class Catamaran extends Boat {
             g.setColor(Color.black);
             g.fillRect(_startPosX + 40, _startPosY + 30, 10, 20);
         }
+    }
+
+    public void SetIFloats(int number) {
+        switch (number) {
+            case 0:
+                addFloat = new AddFloats();
+                break;
+            case 1:
+                addFloat = new AddOvalFloats();
+                break;
+            case 2:
+                addFloat = new AddSemiOvalFloats();
+                break;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + separator + DopColor.getRGB() + separator + Floater + separator + ControlWheel + separator + Seat + separator + FloatsAmount + separator + AddState;
     }
 }

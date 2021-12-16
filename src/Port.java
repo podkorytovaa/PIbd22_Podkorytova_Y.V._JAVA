@@ -86,10 +86,15 @@ public class Port<T extends ITransport, F extends IFloats> {
         }
     }
 
-    public T Get(int index) {
+    // Функция получения элементы из списка
+    public T GetNext(int index) {
         if (index > -1 && index < _places.size()) {
             return _places.get(index);
         }
         return null;
+    }
+
+    public void ClearPlaces() {
+        _places.clear();
     }
 }

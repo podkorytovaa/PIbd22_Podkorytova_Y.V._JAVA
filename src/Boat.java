@@ -3,12 +3,23 @@ import java.awt.*;
 public class Boat extends Vehicle {
     protected int catamaranWidth = 105; // Ширина отрисовки лодки
     protected int catamaranHeight = 55; // Высота отрисовки лодки
+    protected String separator = ";";
 
     // Конструктор
     public Boat(int maxSpeed, int weight, Color mainColor) {
         MaxSpeed = maxSpeed;
         Weight = weight;
         MainColor = mainColor;
+    }
+
+    // Конструктор для загрузки с файла
+    public Boat(String info) {
+        String[] strs = info.split(separator);
+        if (strs.length == 3) {
+            MaxSpeed = Integer.parseInt(strs[0]);
+            Weight = Integer.parseInt(strs[1]);
+            MainColor = Color.decode(strs[2]);
+        }
     }
 
     // Конструктор с изменением размеров лодки
@@ -60,6 +71,11 @@ public class Boat extends Vehicle {
 
         g.setColor(Color.WHITE);
         g.fillOval(_startPosX + 15, _startPosY + 30, 75, 20);
+    }
+
+    @Override
+    public String toString() {
+        return MaxSpeed + separator + Weight + separator + MainColor.getRGB();
     }
 
     public void SetMainColor(Color mainColor) {

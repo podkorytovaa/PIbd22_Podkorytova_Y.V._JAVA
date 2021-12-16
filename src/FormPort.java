@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.filechooser.*;
 import java.awt.*;
 import java.util.*;
 
@@ -9,6 +10,11 @@ public class FormPort {
     private Stack<Boat> stackTransport;
     private DrawPort drawPort;
 
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenuItem saveFile;
+    private JMenuItem loadFile;
+    private JMenu portFileMenu;
     private JPanel groupBoxPorts;
     private JTextField textFieldPort;
     private JButton buttonAddPort;
@@ -26,7 +32,7 @@ public class FormPort {
 
     public FormPort() {
         framePort = new JFrame("Гавань");
-        framePort.setSize(920, 520);
+        framePort.setSize(920, 535);
         framePort.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         framePort.setLayout(null);
         framePort.setResizable(false);
@@ -36,6 +42,7 @@ public class FormPort {
         framePort.getContentPane().add(buttonPortTransport);
         framePort.getContentPane().add(groupBoxTake);
         framePort.getContentPane().add(drawPort);
+        framePort.setJMenuBar(menuBar);
         framePort.repaint();
     }
 
@@ -167,6 +174,40 @@ public class FormPort {
         groupBoxTake.setBorder(borderTake);
 
         drawPort.setBounds(0, 0, 695, 490);
+
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu("Файл");
+        saveFile = new JMenuItem("Сохранить");
+        saveFile.addActionListener(e -> {
+            JFileChooser fileSaveDialog = new JFileChooser();
+            fileSaveDialog.setFileFilter(new FileNameExtensionFilter("Текстовый файл", "txt"));
+            if (fileSaveDialog.showSaveDialog(framePort) == JFileChooser.APPROVE_OPTION) {
+                if (portCollection.SaveData(fileSaveDialog.getSelectedFile().getPath())) {
+                    JOptionPane.showMessageDialog(framePort, "Сохранение прошло успешно", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(framePort, "Не сохранилось", "Результат", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        loadFile = new JMenuItem("Загрузить");
+        loadFile.addActionListener(e -> {
+            JFileChooser fileOpenDialog = new JFileChooser();
+            fileOpenDialog.setFileFilter(new FileNameExtensionFilter("Текстовый файл", "txt"));
+            if (fileOpenDialog.showOpenDialog(framePort) == JFileChooser.APPROVE_OPTION) {
+                if (portCollection.LoadData(fileOpenDialog.getSelectedFile().getPath())) {
+                    JOptionPane.showMessageDialog(framePort, "Загрузили", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                    ReloadLevels();
+                    framePort.repaint();
+                }
+                else {
+                    JOptionPane.showMessageDialog(framePort, "Не загрузили", "Результат", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        fileMenu.add(saveFile);
+        fileMenu.add(loadFile);
+        menuBar.add(fileMenu);
     }
 
     private void ReloadLevels() {
