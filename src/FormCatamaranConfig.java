@@ -39,6 +39,7 @@ public class FormCatamaranConfig extends JDialog {
     private JLabel labelSemiOval;
     private JLabel labelFloatsCount;
     private JSpinner spinnerFloatsCount;
+    private int state;
 
     public FormCatamaranConfig(Frame frame) {
         super(frame, true);
@@ -113,12 +114,15 @@ public class FormCatamaranConfig extends JDialog {
                 switch (labelFloater.getText()) {
                     case "Обычные":
                         floats = new AddFloats();
+                        state = 0;
                         break;
                     case "Овальные":
                         floats = new AddOvalFloats();
+                        state = 1;
                         break;
                     case "Полуовальные":
                         floats = new AddSemiOvalFloats();
+                        state = 2;
                         break;
                 }
                 floats.SetAmount(number);
@@ -178,7 +182,7 @@ public class FormCatamaranConfig extends JDialog {
                         boat = new Boat(maxSpeed, weight, Color.WHITE);
                         break;
                     case "Катамаран":
-                        boat = new Catamaran(maxSpeed, weight, Color.WHITE, Color.WHITE,true, checkBoxControlWheel.isSelected(), checkBoxSeat.isSelected(), 1, 0);
+                        boat = new Catamaran(maxSpeed, weight, Color.WHITE, Color.WHITE,true, checkBoxControlWheel.isSelected(), checkBoxSeat.isSelected(), (int)spinnerFloatsCount.getValue(), state);
                         break;
                 }
             }

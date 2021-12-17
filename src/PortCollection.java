@@ -1,5 +1,4 @@
 import java.util.*;
-//import java.io.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -64,17 +63,15 @@ public class PortCollection {
             fileWriter.write("PortCollection\n");
             for (HashMap.Entry<String, Port<Vehicle, IFloats>> level : portStages.entrySet()) {
                 fileWriter.write("Port" + separator + level.getKey() + "\n");
-                ITransport boat = null;
+                ITransport boat;
                 for (int i = 0; (boat = level.getValue().GetNext(i)) != null; i++) {
-                    if (boat != null) {
-                        if (boat.getClass().getSimpleName().equals("Boat")) {
-                            fileWriter.write("Boat" + separator);
-                        }
-                        if (boat.getClass().getSimpleName().equals("Catamaran")) {
-                            fileWriter.write("Catamaran" + separator);
-                        }
-                        fileWriter.write(boat.toString() + "\n");
+                    if (boat.getClass().getSimpleName().equals("Boat")) {
+                        fileWriter.write("Boat" + separator);
                     }
+                    else if (boat.getClass().getSimpleName().equals("Catamaran")) {
+                        fileWriter.write("Catamaran" + separator);
+                    }
+                    fileWriter.write(boat.toString() + "\n");
                 }
             }
         }
@@ -101,22 +98,103 @@ public class PortCollection {
             }
             Vehicle boat = null;
             String key = "";
-            while ((line = scanner.nextLine()) != null) {
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
                 if (line.contains("Port")) {
                     key = line.split(separator)[1];
                     portStages.put(key, new Port<>(pictureWidth, pictureHeight));
                     continue;
                 }
-                if (line.split(separator)[0] == "Boat") {
-                    boat = new Boat(line.split(separator)[1]);
+                if (line.contains(separator)) {
+                    if (line.contains("Boat")) {
+                        boat = new Boat(line.split(separator)[1]);
+                    }
+                    else if (line.contains("Catamaran")) {
+                        boat = new Catamaran(line.split(separator)[1]);
+                    }
+                    int result = portStages.get(key).Plus(boat);
+                    if (result == -1) {
+                        return false;
+                    }
                 }
-                else if (line.split(separator)[0] == "Catamaran") {
-                    boat = new Catamaran(line.split(separator)[1]);
-                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
-                int result = portStages.get(key).Plus(boat);
-                if (result == -1) {
-                    return false;
+    // Сохранение гавани
+    public boolean SavePort(String filename, String key) {
+        File file = new File(filename);
+        if (file.exists()) {
+            file.delete();
+        }
+        if (!filename.contains(".txt")) {
+            filename += ".txt";
+        }
+        if (!portStages.containsKey(key)) {
+            return false;
+        }
+        try (FileWriter fileWriter = new FileWriter(filename, false)) {
+            if (portStages.containsKey(key)) {
+                fileWriter.write("Port" + separator + key + "\n");
+            }
+            ITransport boat;
+            for (int i = 0; (boat = portStages.get(key).GetNext(i)) != null; i++) {
+                if (boat.getClass().getSimpleName().equals("Boat")) {
+                    fileWriter.write("Boat" + separator);
+                }
+                if (boat.getClass().getSimpleName().equals("Catamaran")) {
+                    fileWriter.write("Catamaran" + separator);
+                }
+                fileWriter.write(boat.toString() + "\n");
+
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    // Загрузка гавани
+    public boolean LoadPort(String filename) {
+        File file = new File(filename);
+        if (!file.exists()) {
+            return false;
+        }
+        try (FileReader fileReader = new FileReader(filename)) {
+            Scanner scanner = new Scanner(fileReader);
+            String key;
+            String line = scanner.nextLine();
+            if (line.contains("Port:")) {
+                key = line.split(separator)[1];
+                if (portStages.containsKey(key)) {
+                    portStages.get(key).ClearPlaces();
+                }
+                else {
+                    portStages.put(key, new Port<>(pictureWidth, pictureHeight));
+                }
+            }
+            else {
+                return false;
+            }
+            Vehicle boat = null;
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                if (line.contains(separator)) {
+                    if (line.contains("Boat")) {
+                        boat = new Boat(line.split(separator)[1]);
+                    }
+                    else if (line.contains("Catamaran")) {
+                        boat = new Catamaran(line.split(separator)[1]);
+                    }
+                    int result = portStages.get(key).Plus(boat);
+                    if (result == -1) {
+                        return false;
+                    }
                 }
             }
         }

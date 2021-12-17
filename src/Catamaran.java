@@ -33,7 +33,6 @@ public class Catamaran extends Boat {
         Seat = seat;
         FloatsAmount = floatsAmount;
         AddState = addState;
-        //addFloat =
         SetIFloats(AddState);
         addFloat.SetAmount(FloatsAmount);
     }
@@ -50,13 +49,10 @@ public class Catamaran extends Boat {
             Floater = Boolean.parseBoolean(strs[4]);
             ControlWheel = Boolean.parseBoolean(strs[5]);
             Seat = Boolean.parseBoolean(strs[6]);
-
             FloatsAmount = Integer.parseInt(strs[7]);
             AddState = Integer.parseInt(strs[8]);
-            //addFloat =
             SetIFloats(AddState);
             addFloat.SetAmount(FloatsAmount);
-
         }
     }
 
