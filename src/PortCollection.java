@@ -127,15 +127,15 @@ public class PortCollection {
 
     // Сохранение гавани
     public boolean SavePort(String filename, String key) {
+        if (!portStages.containsKey(key)) {
+            return false;
+        }
         File file = new File(filename);
         if (file.exists()) {
             file.delete();
         }
         if (!filename.contains(".txt")) {
             filename += ".txt";
-        }
-        if (!portStages.containsKey(key)) {
-            return false;
         }
         try (FileWriter fileWriter = new FileWriter(filename, false)) {
             if (portStages.containsKey(key)) {
@@ -146,11 +146,10 @@ public class PortCollection {
                 if (boat.getClass().getSimpleName().equals("Boat")) {
                     fileWriter.write("Boat" + separator);
                 }
-                if (boat.getClass().getSimpleName().equals("Catamaran")) {
+                else if (boat.getClass().getSimpleName().equals("Catamaran")) {
                     fileWriter.write("Catamaran" + separator);
                 }
                 fileWriter.write(boat.toString() + "\n");
-
             }
         }
         catch (IOException e) {
