@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DrawPort extends JPanel {
-    private PortCollection portCollector;
+    private final PortCollection portCollector;
     private String port = null;
 
     public DrawPort(PortCollection portCollection) {
