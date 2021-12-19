@@ -20,22 +20,22 @@ public class Port<T extends ITransport, F extends IFloats> {
     }
 
     // Перегрузка оператора сложения
-    public int Plus(T boat) {
-        if (_places.size() < _maxCount) {
-            _places.add(boat);
-            return _places.size() - 1;
+    public int Plus(T boat) throws PortOverflowException {
+        if (_places.size() >= _maxCount) {
+            throw new PortOverflowException();
         }
-        return -1;
+        _places.add(boat);
+        return _places.size() - 1;
     }
 
     // Перегрузка оператора вычитания
-    public T Minus(int index) {
-        if (index > -1 && index < _maxCount && _places.get(index) != null) {
-            T temp = _places.get(index);
-            _places.remove(index);
-            return temp;
+    public T Minus(int index) throws PortNotFoundException {
+        if (index <= -1 || index >= _places.size()) {
+            throw new PortNotFoundException(index);
         }
-        return null;
+        T temp = _places.get(index);
+        _places.remove(index);
+        return temp;
     }
 
     public boolean More(Port<T, F> p1, Port<T, F> p2) {

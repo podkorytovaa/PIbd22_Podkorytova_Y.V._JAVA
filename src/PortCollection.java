@@ -1,8 +1,6 @@
 import java.util.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.security.KeyException;
 
 public class PortCollection {
     final HashMap<String, Port<Vehicle, IFloats>> portStages; // Хранилище с гаванями
@@ -51,7 +49,7 @@ public class PortCollection {
     }
 
     // Сохранение информации по лодкам в гаванях в файл
-    public boolean SaveData(String filename) {
+    public void SaveData(String filename) throws IOException {
         File file = new File(filename);
         if (file.exists()) {
             file.delete();
@@ -75,17 +73,13 @@ public class PortCollection {
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     // Загрузка информации по транспорту в гаванях из файла
-    public boolean LoadData(String filename) {
+    public void LoadData(String filename) throws IOException, PortOverflowException, InstantiationException {
         File file = new File(filename);
         if (!file.exists()) {
-            return false;
+            throw new FileNotFoundException();
         }
         try (FileReader fileReader = new FileReader(filename)) {
             Scanner scanner = new Scanner(fileReader);
@@ -94,7 +88,7 @@ public class PortCollection {
                 portStages.clear();
             }
             else {
-                return false;
+                throw new IllegalArgumentException("Неверный формат файла");
             }
             Vehicle boat = null;
             String key = "";
@@ -114,21 +108,17 @@ public class PortCollection {
                     }
                     int result = portStages.get(key).Plus(boat);
                     if (result == -1) {
-                        return false;
+                        throw new InstantiationException("Не удалось загрузить лодку в гавань");
                     }
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     // Сохранение гавани
-    public boolean SavePort(String filename, String key) {
+    public void SavePort(String filename, String key) throws IOException, KeyException {
         if (!portStages.containsKey(key)) {
-            return false;
+            throw new KeyException();
         }
         File file = new File(filename);
         if (file.exists()) {
@@ -152,17 +142,13 @@ public class PortCollection {
                 fileWriter.write(boat.toString() + "\n");
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     // Загрузка гавани
-    public boolean LoadPort(String filename) {
+    public void LoadPort(String filename) throws IOException, PortOverflowException, InstantiationException {
         File file = new File(filename);
         if (!file.exists()) {
-            return false;
+            throw new FileNotFoundException();
         }
         try (FileReader fileReader = new FileReader(filename)) {
             Scanner scanner = new Scanner(fileReader);
@@ -178,7 +164,7 @@ public class PortCollection {
                 }
             }
             else {
-                return false;
+                throw new IllegalArgumentException("Неверный формат файла");
             }
             Vehicle boat = null;
             while (scanner.hasNextLine()) {
@@ -192,14 +178,10 @@ public class PortCollection {
                     }
                     int result = portStages.get(key).Plus(boat);
                     if (result == -1) {
-                        return false;
+                        throw new InstantiationException("Не удалось загрузить лодку в гавань");
                     }
                 }
             }
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 }

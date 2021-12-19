@@ -3,12 +3,17 @@ import javax.swing.border.*;
 import javax.swing.filechooser.*;
 import java.awt.*;
 import java.util.*;
+import java.io.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 public class FormPort {
     private JFrame framePort;
     private PortCollection portCollection;
     private Stack<Boat> stackTransport;
     private DrawPort drawPort;
+    private Logger logger;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -52,6 +57,8 @@ public class FormPort {
         stackTransport = new Stack<>();
         portCollection = new PortCollection(695, 490);
         drawPort = new DrawPort(portCollection);
+        logger = LogManager.getLogger(FormPort.class);
+        PropertyConfigurator.configure("src\\log4j.properties");
 
         // меню
         menuBar = new JMenuBar();
@@ -61,11 +68,18 @@ public class FormPort {
             JFileChooser fileSaveDialog = new JFileChooser();
             fileSaveDialog.setFileFilter(new FileNameExtensionFilter("Текстовый файл", "txt"));
             if (fileSaveDialog.showSaveDialog(framePort) == JFileChooser.APPROVE_OPTION) {
-                if (portCollection.SaveData(fileSaveDialog.getSelectedFile().getPath())) {
+                try {
+                    portCollection.SaveData(fileSaveDialog.getSelectedFile().getPath());
                     JOptionPane.showMessageDialog(framePort, "Сохранение прошло успешно", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Сохранен файл " + fileSaveDialog.getSelectedFile().getPath());
                 }
-                else {
+                catch (IOException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Ошибка при сохранении файла", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                }
+                catch (Exception ex) {
                     JOptionPane.showMessageDialog(framePort, "Не сохранилось", "Результат", JOptionPane.ERROR_MESSAGE);
+                    logger.fatal(ex.getMessage());
                 }
             }
         });
@@ -74,13 +88,28 @@ public class FormPort {
             JFileChooser fileOpenDialog = new JFileChooser();
             fileOpenDialog.setFileFilter(new FileNameExtensionFilter("Текстовый файл", "txt"));
             if (fileOpenDialog.showOpenDialog(framePort) == JFileChooser.APPROVE_OPTION) {
-                if (portCollection.LoadData(fileOpenDialog.getSelectedFile().getPath())) {
+                try {
+                    portCollection.LoadData(fileOpenDialog.getSelectedFile().getPath());
                     JOptionPane.showMessageDialog(framePort, "Загрузили", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Загружен файл " + fileOpenDialog.getSelectedFile().getPath());
                     ReloadLevels();
                     framePort.repaint();
                 }
-                else {
-                    JOptionPane.showMessageDialog(framePort, "Не загрузили", "Результат", JOptionPane.ERROR_MESSAGE);
+                catch (PortOverflowException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
+                    logger.warn(ex.getMessage());
+                }
+                catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Файл не найден", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                }
+                catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Некорректные данные", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка при загрузке", JOptionPane.ERROR_MESSAGE);
+                    logger.fatal(ex.getMessage());
                 }
             }
         });
@@ -94,11 +123,17 @@ public class FormPort {
                 return;
             }
             if (fileSaveDialog.showSaveDialog(framePort) == JFileChooser.APPROVE_OPTION) {
-                if (portCollection.SavePort(fileSaveDialog.getSelectedFile().getPath(), listBoxPorts.getSelectedValue())) {
+                try {
+                    portCollection.SavePort(fileSaveDialog.getSelectedFile().getPath(), listBoxPorts.getSelectedValue());
                     JOptionPane.showMessageDialog(framePort, "Сохранение прошло успешно", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Сохранена гавань в файл " + fileSaveDialog.getSelectedFile().getPath());
                 }
-                else {
-                    JOptionPane.showMessageDialog(framePort, "Не сохранилось", "Результат", JOptionPane.ERROR_MESSAGE);
+                catch (IOException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Ошибка при сохранении файла", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+                    logger.fatal(ex.getMessage());
                 }
             }
         });
@@ -107,13 +142,28 @@ public class FormPort {
             JFileChooser fileOpenDialog = new JFileChooser();
             fileOpenDialog.setFileFilter(new FileNameExtensionFilter("Текстовый файл", "txt"));
             if (fileOpenDialog.showOpenDialog(framePort) == JFileChooser.APPROVE_OPTION) {
-                if (portCollection.LoadPort(fileOpenDialog.getSelectedFile().getPath())) {
+                try {
+                    portCollection.LoadPort(fileOpenDialog.getSelectedFile().getPath());
                     JOptionPane.showMessageDialog(framePort, "Загрузили", "Результат", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Загружена гавань из файла " + fileOpenDialog.getSelectedFile().getPath());
                     ReloadLevels();
                     framePort.repaint();
                 }
-                else {
-                    JOptionPane.showMessageDialog(framePort, "Не загрузили", "Результат", JOptionPane.ERROR_MESSAGE);
+                catch (PortOverflowException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
+                    logger.warn(ex.getMessage());
+                }
+                catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Файл не найден", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                }
+                catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Некорректные данные", JOptionPane.ERROR_MESSAGE);
+                    logger.error(ex.getMessage());
+                }
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+                    logger.fatal(ex.getMessage());
                 }
             }
         });
@@ -134,6 +184,7 @@ public class FormPort {
         buttonAddPort.addActionListener(e -> {
             if (!textFieldPort.getText().equals("")) {
                 portCollection.AddPort(textFieldPort.getText());
+                logger.info("Добавлена гавань " + textFieldPort.getText());
                 ReloadLevels();
                 framePort.repaint();
             }
@@ -147,6 +198,9 @@ public class FormPort {
         listBoxPorts.setBounds(10, 90, 170, 100);
         listBoxPorts.addListSelectionListener(e -> {
             drawPort.SetPort(listBoxPorts.getSelectedValue());
+            if (listBoxPorts.getSelectedValue() != null) {
+                logger.info("Перешли в гавань " + listBoxPorts.getSelectedValue());
+            }
             framePort.repaint();
         });
 
@@ -157,6 +211,7 @@ public class FormPort {
                 int result = JOptionPane.showConfirmDialog(framePort, "Удалить гавань " + listBoxPorts.getSelectedValue() + "?", "Удаление", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
                     portCollection.DelPort(listBoxPorts.getSelectedValue());
+                    logger.info("Гавань " + listBoxPorts.getSelectedValue() + " удалена");
                     ReloadLevels();
                     framePort.repaint();
                 }
@@ -182,11 +237,20 @@ public class FormPort {
                 FormCatamaranConfig formConfig = new FormCatamaranConfig(framePort);
                 Vehicle transport = (Vehicle) formConfig.GetTransport();
                 if (transport  != null) {
-                    int index = portCollection.Get(listBoxPorts.getSelectedValue()).Plus((Boat)transport);
-                    if (index > -1) {
-                        framePort.repaint();
-                    } else {
-                        JOptionPane.showMessageDialog(framePort, "Гавань переполнена");
+                    try {
+                        int index = portCollection.Get(listBoxPorts.getSelectedValue()).Plus((Boat) transport);
+                        if (index > -1) {
+                            framePort.repaint();
+                            logger.info("Добавлена лодка " + transport);
+                        }
+                    }
+                    catch (PortOverflowException ex) {
+                        JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
+                        logger.warn("Гавань переполнена, невозможно добавить лодку");
+                    }
+                    catch (Exception ex) {
+                        JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+                        logger.warn("Неизвестная ошибка при попытке добавить лодку");
                     }
                 }
             }
@@ -206,18 +270,23 @@ public class FormPort {
         buttonPutOnStack.addActionListener(e -> {
             if (listBoxPorts.getSelectedIndex() >= 0) {
                 if (!textFieldPlace.getText().equals("")) {
-                    int index = Integer.parseInt(textFieldPlace.getText());
-                    Boat boat = (Boat) portCollection.Get(listBoxPorts.getSelectedValue()).Minus(index);
-                    if (boat != null) {
-                        stackTransport.add(boat);
-                        framePort.repaint();
+                    try {
+                        int index = Integer.parseInt(textFieldPlace.getText());
+                        Boat boat = (Boat) portCollection.Get(listBoxPorts.getSelectedValue()).Minus(index);
+                        if (boat != null) {
+                            stackTransport.add(boat);
+                            framePort.repaint();
+                            logger.info("Лодка " + boat + " помещена в стек");
+                        }
                     }
-                    else {
-                        JOptionPane.showMessageDialog(framePort, "Транспорта не существует");
+                    catch (PortNotFoundException ex) {
+                        JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Не найдено", JOptionPane.ERROR_MESSAGE);
+                        logger.warn(ex.getMessage());
                     }
-                }
-                else {
-                    JOptionPane.showMessageDialog(framePort, "Выберите место");
+                    catch (Exception ex) {
+                        JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
+                        logger.fatal(ex.getMessage());
+                    }
                 }
             }
             else {
@@ -230,7 +299,10 @@ public class FormPort {
         buttonTakeBoat.addActionListener(e -> {
             if (!stackTransport.isEmpty()) {
                 FormCatamaran formCatamaran = new FormCatamaran();
-                formCatamaran.SetBoat(stackTransport.pop());
+                Boat boat = stackTransport.get(stackTransport.size() - 1);
+                formCatamaran.SetBoat(Objects.requireNonNull(boat));
+                stackTransport.pop();
+                logger.info("Из стека изъята лодка " + boat);
                 framePort.repaint();
             }
             else {
