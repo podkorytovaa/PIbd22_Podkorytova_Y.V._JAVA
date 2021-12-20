@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.util.*;
 
-public class Boat extends Vehicle {
+public class Boat extends Vehicle implements Iterator<String>, Iterable<String>, Comparable<Boat> {
     protected int catamaranWidth = 105; // Ширина отрисовки лодки
     protected int catamaranHeight = 55; // Высота отрисовки лодки
     protected String separator = ";";
@@ -80,5 +81,80 @@ public class Boat extends Vehicle {
 
     public void SetMainColor(Color mainColor) {
         MainColor = mainColor;
+    }
+
+    public boolean equals(Boat other) {
+        if (other == null) {
+            return false;
+        }
+        if(other.getClass() != Boat.class) {
+            return false;
+        }
+        if (MaxSpeed != other.MaxSpeed) {
+            return false;
+        }
+        if (Weight != other.Weight) {
+            return false;
+        }
+        if (MainColor != other.MainColor) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != Boat.class) {
+            return false;
+        }
+        else {
+            return equals((Boat) obj);
+        }
+    }
+
+    private int currentIndex;
+    @Override
+    public int compareTo(Boat boat) {
+        if (MaxSpeed != boat.MaxSpeed) {
+            return Integer.compare(MaxSpeed, boat.MaxSpeed);
+        }
+        if (Weight != boat.Weight) {
+            return Integer.compare(Weight, boat.Weight);
+        }
+        if (MainColor != boat.MainColor) {
+            return Integer.compare(MainColor.getRGB(), boat.MainColor.getRGB());
+        }
+        return 0;
+    }
+
+    @Override
+    public String next() {
+        currentIndex++;
+        switch (currentIndex) {
+            case 0:
+                return String.valueOf(MaxSpeed);
+            case 1:
+                return String.valueOf(Weight);
+            case 2:
+                return String.valueOf(MainColor.getRGB());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (currentIndex > 2) {
+            currentIndex = -1;
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return this;
     }
 }

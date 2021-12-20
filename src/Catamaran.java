@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.util.*;
 
-public class Catamaran extends Boat {
+public class Catamaran extends Boat implements Iterable<String>, Iterator<String>, Comparable<Boat> {
     private IFloats addFloat;
     public IFloats getFloats() { return addFloat; }
     public void setFloats(IFloats addFloat) { this.addFloat = addFloat; }
@@ -9,7 +10,7 @@ public class Catamaran extends Boat {
     public Color getDopColor() { return DopColor; }
     public void setDopColor(Color dopColor) { DopColor = dopColor; }
 
-    private boolean Floater; // Признак наличия поплавков
+    public boolean Floater; // Признак наличия поплавков
     public boolean getFloater() { return Floater; }
     public void setFloater(boolean floater) { Floater = floater; }
 
@@ -94,5 +95,117 @@ public class Catamaran extends Boat {
     @Override
     public String toString() {
         return super.toString() + separator + DopColor.getRGB() + separator + Floater + separator + ControlWheel + separator + Seat + separator + FloatsAmount + separator + AddState;
+    }
+
+    public boolean equals(Catamaran other) {
+        if (other == null) {
+            return false;
+        }
+        if (other.getClass() != Catamaran.class) {
+            return false;
+        }
+        if (MaxSpeed != other.MaxSpeed) {
+            return false;
+        }
+        if (Weight != other.Weight) {
+            return false;
+        }
+        if (MainColor != other.MainColor) {
+            return false;
+        }
+        if (DopColor != other.DopColor) {
+            return false;
+        }
+        if (Floater != other.Floater) {
+            return false;
+        }
+        if (ControlWheel != other.ControlWheel) {
+            return false;
+        }
+        if (Seat != other.Seat) {
+            return false;
+        }
+        if (addFloat.getClass() != other.addFloat.getClass()){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != Catamaran.class) {
+            return false;
+        }
+        else {
+            return equals((Catamaran)obj);
+        }
+    }
+
+    private int currentIndex;
+    @Override
+    public int compareTo(Boat boat) {
+        Catamaran catamaran = (Catamaran) boat;
+        if (DopColor != catamaran.DopColor) {
+            return Integer.compare(DopColor.getRGB(), catamaran.DopColor.getRGB());
+        }
+        if (Floater != catamaran.Floater) {
+            return Boolean.compare(Floater, catamaran.Floater);
+        }
+        if (ControlWheel != catamaran.ControlWheel) {
+            return Boolean.compare(ControlWheel, catamaran.ControlWheel);
+        }
+        if (Seat != catamaran.Seat) {
+            return Boolean.compare(Seat, catamaran.Seat);
+        }
+        if (addFloat == null && catamaran.addFloat != null) {
+            return 1;
+        }
+        if (addFloat != null && catamaran.addFloat == null) {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (currentIndex > 8) {
+            currentIndex = -1;
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String next() {
+        currentIndex++;
+        switch (currentIndex) {
+            case 0:
+                return String.valueOf(MaxSpeed);
+            case 1:
+                return String.valueOf(Weight);
+            case 2:
+                return String.valueOf(MainColor.getRGB());
+            case 3:
+                return String.valueOf(DopColor.getRGB());
+            case 4:
+                return String.valueOf(Floater);
+            case 5:
+                return String.valueOf(ControlWheel);
+            case 6:
+                return String.valueOf(Seat);
+            case 7:
+                return String.valueOf(addFloat);
+            case 8:
+                return String.valueOf(addFloat);
+        }
+        return null;
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return this;
     }
 }

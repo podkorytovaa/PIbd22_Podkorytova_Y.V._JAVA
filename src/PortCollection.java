@@ -61,8 +61,7 @@ public class PortCollection {
             fileWriter.write("PortCollection\n");
             for (HashMap.Entry<String, Port<Vehicle, IFloats>> level : portStages.entrySet()) {
                 fileWriter.write("Port" + separator + level.getKey() + "\n");
-                ITransport boat;
-                for (int i = 0; (boat = level.getValue().GetNext(i)) != null; i++) {
+                for (ITransport boat : level.getValue()) {
                     if (boat.getClass().getSimpleName().equals("Boat")) {
                         fileWriter.write("Boat" + separator);
                     }
@@ -76,7 +75,7 @@ public class PortCollection {
     }
 
     // Загрузка информации по транспорту в гаванях из файла
-    public void LoadData(String filename) throws IOException, PortOverflowException, InstantiationException {
+    public void LoadData(String filename) throws IOException, PortOverflowException, InstantiationException, PortAlreadyHaveException {
         File file = new File(filename);
         if (!file.exists()) {
             throw new FileNotFoundException();
@@ -131,8 +130,7 @@ public class PortCollection {
             if (portStages.containsKey(key)) {
                 fileWriter.write("Port" + separator + key + "\n");
             }
-            ITransport boat;
-            for (int i = 0; (boat = portStages.get(key).GetNext(i)) != null; i++) {
+            for (ITransport boat : portStages.get(key)) {
                 if (boat.getClass().getSimpleName().equals("Boat")) {
                     fileWriter.write("Boat" + separator);
                 }
@@ -145,7 +143,7 @@ public class PortCollection {
     }
 
     // Загрузка гавани
-    public void LoadPort(String filename) throws IOException, PortOverflowException, InstantiationException {
+    public void LoadPort(String filename) throws IOException, PortOverflowException, InstantiationException, PortAlreadyHaveException {
         File file = new File(filename);
         if (!file.exists()) {
             throw new FileNotFoundException();

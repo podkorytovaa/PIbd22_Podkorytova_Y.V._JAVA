@@ -1,13 +1,14 @@
 import java.awt.*;
 import java.util.*;
 
-public class Port<T extends ITransport, F extends IFloats> {
+public class Port<T extends ITransport, F extends IFloats> implements Iterator<T>, Iterable<T> {
     private final ArrayList<T> _places; // Список объектов, которые храним
     private final int _maxCount; // Максимальное количество мест в гавани
     private final int pictureWidth; // Ширина окна отрисовки
     private final int pictureHeight; // Высота окна отрисовки
     private final int _placeSizeWidth = 230; // Ширина парковочного места
     private final int _placeSizeHeight = 120; // Высота парковочного места
+    private int _currentIndex;
 
     // Конструктор
     public Port(int picWidth, int picHeight) {
@@ -17,12 +18,16 @@ public class Port<T extends ITransport, F extends IFloats> {
         _places = new ArrayList<>();
         pictureWidth = picWidth;
         pictureHeight = picHeight;
+        _currentIndex = -1;
     }
 
     // Перегрузка оператора сложения
-    public int Plus(T boat) throws PortOverflowException {
+    public int Plus(T boat) throws PortOverflowException, PortAlreadyHaveException {
         if (_places.size() >= _maxCount) {
             throw new PortOverflowException();
+        }
+        if (_places.contains(boat)) {
+            throw new PortAlreadyHaveException();
         }
         _places.add(boat);
         return _places.size() - 1;
@@ -96,5 +101,29 @@ public class Port<T extends ITransport, F extends IFloats> {
 
     public void ClearPlaces() {
         _places.clear();
+    }
+
+    public void Sort() {
+        _places.sort((Comparator<T>)new BoatComparer());
+    }
+
+    @Override
+    public boolean hasNext() {
+        return _currentIndex < _places.size() - 1;
+    }
+
+    @Override
+    public T next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        _currentIndex++;
+        return _places.get(_currentIndex);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        _currentIndex = -1;
+        return this;
     }
 }

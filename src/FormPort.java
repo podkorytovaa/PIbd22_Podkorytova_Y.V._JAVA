@@ -29,6 +29,7 @@ public class FormPort {
     private DefaultListModel<String> listPorts;
     private JButton buttonDelPort;
     private Border borderPorts;
+    private JButton buttonSort;
     private JButton buttonPortTransport;
     private JPanel groupBoxTake;
     private JLabel labelPlace;
@@ -46,6 +47,7 @@ public class FormPort {
         framePort.setResizable(false);
         framePort.setVisible(true);
         framePort.getContentPane().add(groupBoxPorts);
+        framePort.getContentPane().add(buttonSort);
         framePort.getContentPane().add(buttonPortTransport);
         framePort.getContentPane().add(groupBoxTake);
         framePort.getContentPane().add(drawPort);
@@ -230,8 +232,21 @@ public class FormPort {
         groupBoxPorts.add(buttonAddPort);
         groupBoxPorts.add(buttonDelPort);
 
+        buttonSort = new JButton("Сортировать");
+        buttonSort.setBounds(710, 260, 190, 30);
+        buttonSort.addActionListener(e -> {
+            if (listBoxPorts.getSelectedIndex() >= 0) {
+                portCollection.Get(listBoxPorts.getSelectedValue()).Sort();
+                framePort.repaint();
+                logger.info("Сортировка уровней");
+            }
+            else {
+                JOptionPane.showMessageDialog(framePort, "Гавань не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         buttonPortTransport = new JButton("Пришвартовать транспорт");
-        buttonPortTransport.setBounds(710, 275, 190, 30);
+        buttonPortTransport.setBounds(710, 300, 190, 30);
         buttonPortTransport.addActionListener(e -> {
             if (listBoxPorts.getSelectedIndex() >= 0) {
                 FormCatamaranConfig formConfig = new FormCatamaranConfig(framePort);
@@ -248,9 +263,13 @@ public class FormPort {
                         JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Переполнение", JOptionPane.ERROR_MESSAGE);
                         logger.warn("Гавань переполнена, невозможно добавить лодку");
                     }
+                    catch (PortAlreadyHaveException ex) {
+                        JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Дублирование", JOptionPane.ERROR_MESSAGE);
+                        logger.warn("Дублирование лодки");
+                    }
                     catch (Exception ex) {
                         JOptionPane.showMessageDialog(framePort, ex.getMessage(), "Неизвестная ошибка", JOptionPane.ERROR_MESSAGE);
-                        logger.warn("Неизвестная ошибка при попытке добавить лодку");
+                        logger.fatal("Неизвестная ошибка при попытке добавить лодку");
                     }
                 }
             }
@@ -316,7 +335,7 @@ public class FormPort {
         groupBoxTake.add(textFieldPlace);
         groupBoxTake.add(buttonPutOnStack);
         groupBoxTake.add(buttonTakeBoat);
-        groupBoxTake.setBounds(715, 330, 180, 135);
+        groupBoxTake.setBounds(715, 340, 180, 135);
         groupBoxTake.setBorder(borderTake);
 
         drawPort.setBounds(0, 0, 695, 490);
